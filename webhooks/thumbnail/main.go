@@ -13,25 +13,19 @@ import (
 	"path"
 	"strings"
 
-	"github.com/fermyon/spin/sdk/go/config"
 	spinhttp "github.com/fermyon/spin/sdk/go/http"
 	"github.com/jpflueger/awesome/blob"
 	"golang.org/x/image/draw"
 )
 
 const (
-	allowedOrigin = "eventgrid.azure.net"
-)
-
-var (
-	sharedAccessKey string
+	allowedOrigin   = "eventgrid.azure.net"
+	sharedAccessKey = "placeholder"
 )
 
 func init() {
 	spinhttp.Handle(func(w http.ResponseWriter, r *http.Request) {
 		log.SetFlags(log.LstdFlags | log.LUTC)
-
-		populateGlobals()
 
 		if !isFromAllowedOrigin(r) {
 			http.Error(w, fmt.Sprintf("Request origin '%v' is not allowed", r.Header.Get("WebHook-Request-Origin")), http.StatusForbidden)
@@ -75,7 +69,14 @@ func handleEvent(w http.ResponseWriter, r *http.Request) {
 
 	switch event.Type {
 	case StorageBlobCreatedEvent:
-		handleBlobCreatedEvent(w, &event)
+		// ignore thumbnails
+		// TODO: write thumbnails to a different container
+		if strings.Contains(event.Data.Url, "-thumb") {
+			log.Printf("Ignoring thumbnail: %v", event.Data.Url)
+			w.WriteHeader(http.StatusOK)
+		} else {
+			handleBlobCreatedEvent(w, &event)
+		}
 		return
 	case StorageBlobDeletedEvent:
 		handleBlobDeletedEvent(w, &event)
@@ -161,13 +162,6 @@ func handleBlobRenamedEvent(w http.ResponseWriter, event *CloudEvent[BlobStorage
 }
 
 // helpers
-func populateGlobals() {
-	if val, err := config.Get("shared_access_key"); err != nil {
-		panic(fmt.Sprintf("Failed to get config: %v", err))
-	} else {
-		sharedAccessKey = val
-	}
-}
 
 func isFromAllowedOrigin(r *http.Request) bool {
 	return r.Header.Get("WebHook-Request-Origin") == allowedOrigin

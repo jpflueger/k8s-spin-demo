@@ -16,6 +16,7 @@ spec:
       containers:
         - name: k8s-spin-webhooks
           image: ghcr.io/jpflueger/k8s-spin-demo/webhooks:v0.1.0-pre3
+          imagePullPolicy: IfNotPresent
           command: ["/"]
           resources:
             limits:

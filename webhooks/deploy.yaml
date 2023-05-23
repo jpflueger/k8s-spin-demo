@@ -15,7 +15,7 @@ spec:
       runtimeClassName: wasmtime-spin
       containers:
         - name: k8s-spin-webhooks
-          image: docker.io/jpflueger/k8s-spin-webhooks:0.1.0
+          image: ghcr.io/jpflueger/k8s-spin-demo/webhooks:latest
           command: ["/"]
 ---
 apiVersion: v1

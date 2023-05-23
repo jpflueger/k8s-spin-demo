@@ -43,6 +43,7 @@ jobs:
             ghcr.io/jpflueger/k8s-spin-demo/webhooks:latest
           context: webhooks
           platforms: wasi/wasm
+
       - name: clear
         if: always()
         run: |

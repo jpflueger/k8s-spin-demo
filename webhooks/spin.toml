@@ -5,6 +5,9 @@ name = "k8s-spin-webhooks"
 trigger = { type = "http", base = "/webhooks" }
 version = "0.1.0"
 
+[variables]
+shared_access_key = { default = "stuffandthings" }
+
 [[component]]
 id = "thumbnail"
 source = "thumbnail/thumbnail.wasm"
@@ -15,4 +18,4 @@ route = "/thumbnail"
 workdir = "thumbnail"
 command = "tinygo build -target=wasi -gc=leaking -no-debug -o thumbnail.wasm main.go"
 [component.config]
-shared_access_key = "stuffandthings"
+shared_access_key = "{{ shared_access_key }}"

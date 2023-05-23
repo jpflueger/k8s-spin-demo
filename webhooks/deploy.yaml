@@ -12,11 +12,18 @@ spec:
       labels:
         app: k8s-spin-webhooks
     spec:
-      runtimeClassName: wasmtime-spin
+      runtimeClassName: wasmtime-spin-v0-5-1
       containers:
         - name: k8s-spin-webhooks
           image: ghcr.io/jpflueger/k8s-spin-demo/webhooks:latest
           command: ["/"]
+          resources:
+            limits:
+              cpu: 500m
+              memory: 500Mi
+            requests:
+              cpu: 50m
+              memory: 50Mi
 ---
 apiVersion: v1
 kind: Service

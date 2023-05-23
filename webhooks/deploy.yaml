@@ -15,7 +15,7 @@ spec:
       runtimeClassName: wasmtime-spin-v0-5-1
       containers:
         - name: k8s-spin-webhooks
-          image: ghcr.io/jpflueger/k8s-spin-demo/webhooks:latest
+          image: ghcr.io/jpflueger/k8s-spin-demo/webhooks:v0.1.0-pre3
           command: ["/"]
           resources:
             limits:

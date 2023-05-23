@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-spin-webhooks
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: k8s-spin-webhooks
+  template:
+    metadata:
+      labels:
+        app: k8s-spin-webhooks
+    spec:
+      runtimeClassName: wasmtime-spin
+      containers:
+        - name: k8s-spin-webhooks
+          image: docker.io/jpflueger/k8s-spin-webhooks:0.1.0
+          command: ["/"]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: k8s-spin-webhooks
+spec:
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  selector:
+    app: k8s-spin-webhooks
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: k8s-spin-webhooks
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "false"
+    kubernetes.io/ingress.class: traefik
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /k8s-spin-webhooks
+            pathType: Prefix
+            backend:
+              service:
+                name: k8s-spin-webhooks
+                port:
+                  number: 80

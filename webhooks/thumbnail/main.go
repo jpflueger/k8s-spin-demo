@@ -152,13 +152,13 @@ func handleBlobCreatedEvent(w http.ResponseWriter, event *CloudEvent[BlobStorage
 }
 
 func handleBlobDeletedEvent(w http.ResponseWriter, event *CloudEvent[BlobStorageEvent]) {
-	log.Printf("Blob deleted: %v", event.Data.Url)
-	panic("Not implemented")
+	log.Printf("Blob deletion isn't handled yet: %v", event.Data.Url)
+	w.WriteHeader(http.StatusNotImplemented)
 }
 
 func handleBlobRenamedEvent(w http.ResponseWriter, event *CloudEvent[BlobStorageEvent]) {
-	log.Printf("Blob renamed: %v", event.Data.Url)
-	panic("Not implemented")
+	log.Printf("Blob renamed isn't handled yet: %v", event.Data.Url)
+	w.WriteHeader(http.StatusNotImplemented)
 }
 
 // helpers
